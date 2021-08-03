@@ -12,7 +12,7 @@ const useStyles = makeStyles({
     justifyContent: 'center',
     width: '350px',
     height: '350px',
-    margin: '7em auto',
+    margin: 'auto',
     borderRadius: '1.5em',
     backgroundColor: '#ffffff',
     boxShadow: '0px 11px 35px 2px rgba(0, 0, 0, 0.14)',

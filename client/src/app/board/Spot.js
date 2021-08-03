@@ -123,13 +123,14 @@ const Spot = ({ value }) => {
     const spotClicked = e.target.attributes.value.value;
     const previousLocation = ballLocations[ballOnHand];
     const newLocation = rolledNumber + parseInt(previousLocation);
+    const adjustedIndex = parseInt(ballOnHand) % 4;
     let data;
 
     if (prison.includes(previousLocation) &&
       (rolledNumber === 1 || rolledNumber === 6)) {
       const playerBalls = [...ballLocations].splice(indexRange[0], 4);
         if (!playerBalls.includes(startingSpot)) data = startingSpot;
-    } else if (finishing[ballOnHand] && newLocation > finishLine[0]) {
+    } else if (finishing[adjustedIndex] && newLocation > finishLine[0]) {
       data = moveIntoFinishingArea(newLocation, spotClicked, lastNum);
     } else if (previousLocation === '100' && ['7', '21', '35', '49'].includes(spotClicked) && rolledNumber === 1) {
       data = spotClicked;
@@ -139,8 +140,7 @@ const Spot = ({ value }) => {
     if (data) {
       if (finishLane[data] !== undefined) {
         dispatch(checkWin({ location: data, ball: ballOnHand }));
-      }
-      const adjustedIndex = parseInt(ballOnHand) % 4;
+      };
       if (data <= finishLine[0] && data > finishLine[1]) {
         dispatch(setWithinFinish({ adjustedIndex, value: true }));
       };

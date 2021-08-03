@@ -4,7 +4,8 @@ import { Modal, Backdrop, Fade } from '@material-ui/core';
 
 const useStyles = makeStyles({
   buttonInstructions: {
-    margin: '5px',
+    marginLeft: '10px',
+    marginTop: '15px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -21,8 +22,8 @@ const useStyles = makeStyles({
     overflowY: 'auto',
     padding: '5px',
     margin: '5px',
-    width: '700px',
-    height: '340px',
+    width: '500px',
+    height: '300px',
   },
 })
 

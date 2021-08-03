@@ -16,9 +16,11 @@ export const sendBallMove = (data) => async (dispatch) => {
 
 export const fetchPlayer = (data) => async (dispatch) => {
   try {
+    console.log('data fetchplayer: ', data);
     const { select, name } = data;
-    const response = await axios.post('/player', { select });
-    const player = { data: response.data, name }
+    const response = await axios.post('http://localhost:5000/player', { select });
+    const player = { data: response.data, name };
+    console.log('data fetchplayer: ', player);
     dispatch(addPlayer(player));
   } catch (error) {
     console.error(error);

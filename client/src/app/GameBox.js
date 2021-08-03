@@ -16,6 +16,7 @@ const useStyles = makeStyles({
   instrucstionsAndDie: {
     width: '100px',
     heigth: '100px',
+    paddingLeft: '15px',
     flex: '0 1 auto',
   },
 });
@@ -27,14 +28,14 @@ const GameBox = () => {
 
   return (
     <div className={classes.root} >
+      <ChatBox />
+      <Board />
       <div className={classes.instrucstionsAndDie}>
       <Instructions />
       {
       player.playerNumber === player.whoseTurn + '' &&      <Die />
       }
       </div>
-      <Board />
-      <ChatBox />
     </div>
   );
 };
