@@ -3,6 +3,10 @@ import store from './app/store';
 import { addMessage } from './app/features/chatSlice';
 import { moveBall, setWinner, addPlayer, endTurn } from './app/features/playerSlice';
 
+// *** FOR LOCAL TESTING ***
+// const SERVER = "http://localhost:5000";
+
+// *** FOR PRODUCTION ***
 const SERVER = "/";
 
 var socket = io(SERVER);

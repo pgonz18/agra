@@ -5,14 +5,13 @@ const useStyles = makeStyles({
   root: {
     border: '1px solid black',
     marginTop: '5px',
-    marginRight: '30px',
     borderRadius: '20px',
     padding: '8px 15px',
     font: 'bold small sans-serif',
     color: 'white',
     backgroundColor: props => props.color,
     display: 'inline-block',
-    maxWidth: '190px',
+    maxWidth: '145px',
     overflowWrap: 'break-word',
   },
 });

@@ -7,18 +7,18 @@ import Input from './Input';
 const useStyles = makeStyles({
   root: {
     height: '300px',
-    width: '250px',
+    width: '180px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
-    marginLeft: '30px',
+    margin: '1px',
   },
   messages: {
     overflowY: 'auto',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
-    maxWidth: '230px',
+    maxWidth: '175px',
   },
   input: {
     height: '20px',

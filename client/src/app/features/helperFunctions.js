@@ -13,7 +13,6 @@ export const checkNewPosition = (sumDieLocation, clickedLocation, selectedPlayer
     const newLoc = clickedInt - remainder;
     const j = adjustedCorners.indexOf(newLoc, i);
     const difference = j - i;
-    console.log(i, j, newLoc, remainder, clickedLocation);
     if (dieNum === remainder + difference) {
       return clickedLocation;
     };
