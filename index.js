@@ -2,7 +2,16 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const server = require('http').Server(app);
+
+// *** FOR PRODUCTION ***
 const io = require('socket.io')(server);
+
+// *** FOR LOCAL TESTING ***
+// const io = require('socket.io')(server, {
+//   cors: {
+//     origin: 'http://localhost:3000'
+//   }
+// });
 
 const players = require('./players/player');
 const cors = require('cors');
@@ -11,11 +20,16 @@ const bodyParser = require('body-parser');
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use(express.static((__dirname + '/client/build')));
-
 app.post('/player', (req, res) => {
+  console.log('server: ', req.body.select)
   res.send(players[req.body.select]);
 });
+
+// *** FOR PRODUCTION ***
+app.use(express.static((__dirname + '/client/build')));
+
+// *** FOR LOCAL TESTING ***
+// app.use(express.static(path.join(__dirname, 'public')));
 
 io.on('connection', (socket) => {
   console.log('user connected');
