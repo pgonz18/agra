@@ -4,10 +4,9 @@ export const playerSlice = createSlice({
   name: 'player',
   initialState: {},
   reducers: {
-    addPlayer: (state, obj) => {
-      const { data, name } = obj.payload;
-      data.username = name;
-      return data;
+    addPlayer: (state, player) => {
+
+      return player.payload;
     },
     rollDice: (state, value) => {
       state.rolledNumber = value.payload;
