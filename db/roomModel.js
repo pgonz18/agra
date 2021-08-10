@@ -20,7 +20,6 @@ const playerSchema = new Schema({
 const roomSchema = new Schema({
   name: String,
   users: [playerSchema],
-  playersJoined: [String],
   whoseTurn: Number,
   allPrisons: [String],
   ballLocations: [String],
@@ -74,7 +73,6 @@ const addPlayerToDatabase = (username, number) => {
     },
   };
   const { color, prison, finishLane, startingSpot, finishLine, lastNum, ballIndexAdjustment, indexRange } = choices[number];
-
   const player = new Player({
     username,
     playerNumber: number,
@@ -94,7 +92,6 @@ const addPlayerToDatabase = (username, number) => {
 
 const createRoom = (roomName, username, number) => {
   const user = addPlayerToDatabase(username, number);
-  console.log(number);
   const room = new Room({
     name: roomName,
     whoseTurn: 2,
@@ -102,7 +99,6 @@ const createRoom = (roomName, username, number) => {
     allPrisons: ['160', '161', '162', '163', '146', '147', '148', '149', '132', '133', '134', '135', '118', '119', '120', '121'],
     ballLocations: ['160', '161', '162', '163', '146', '147', '148', '149', '132', '133', '134', '135', '118', '119', '120', '121'],
     users: [user],
-    playersJoined: [number],
   });
 
   room.save((err) => {

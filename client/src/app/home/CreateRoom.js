@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/styles';
-import { sendCreateRoom } from '../features/thunks';
+import { fetchRoom } from '../features/thunks';
 
 const useStyles = makeStyles({
   root: {
@@ -45,7 +45,7 @@ const useStyles = makeStyles({
 });
 
 const CreateRoom = ({ clickHandler }) => {
-  const [select, setSelect] = useState('2');
+  const [number, setNumber] = useState('');
   const [name, setName] = useState('');
   const [roomName, setRoomName] = useState('');
 
@@ -53,9 +53,9 @@ const CreateRoom = ({ clickHandler }) => {
 
   const classes = useStyles();
 
-  const handleSelectChange = (e) => {
+  const handleNumberChange = (e) => {
     e.preventDefault();
-    setSelect(e.target.value);
+    setNumber(e.target.value);
   };
 
   const handleNameChange = (e) => {
@@ -70,39 +70,40 @@ const CreateRoom = ({ clickHandler }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(sendCreateRoom({ select, name, roomName }));
+    dispatch(fetchRoom({ number, name, roomName }));
   };
 
   return (
     <form className={classes.root} onSubmit={handleSubmit}>
-        <input onClick={clickHandler} type="submit" value="Lobby" />
-    <div className={classes.room} >
+      <input onClick={clickHandler} type="button" value="Lobby" />
+      <div className={classes.room} >
+        <label>
+          Room name:
+          <input type="text" value={roomName} onChange={handleRoomNameChange} />
+        </label>
+      </div>
+      <div className={classes.pickColor}>
+        <label>
+          Pick color:
+          <select value={number} onChange={handleNumberChange}>
+            <option value="">--Select color--</option>
+            <option value="2">Red</option>
+            <option value="3">Blue</option>
+            <option value="4">Green</option>
+            <option value="5">Orange</option>
+          </select>
+        </label>
+      </div>
+      <div className={classes.input}>
       <label>
-        Room name:
-        <input type="text" value={roomName} onChange={handleRoomNameChange} />
+        Player name:
+        <input type="text" value={name} onChange={handleNameChange} />
       </label>
-    </div>
-    <div className={classes.pickColor}>
-      <label>
-        Pick color:
-        <select value={select} onChange={handleSelectChange}>
-          <option value="2">Red</option>
-          <option value="3">Blue</option>
-          <option value="4">Green</option>
-          <option value="5">Orange</option>
-        </select>
-      </label>
-    </div>
-    <div className={classes.input}>
-    <label>
-      Player name:
-      <input type="text" value={name} onChange={handleNameChange} />
-    </label>
-    </div>
-    <div className={classes.button}>
-    <input type="submit" value="Submit" />
-    </div>
-  </form>
+      </div>
+      <div className={classes.button}>
+      <input type="submit" value="Submit" />
+      </div>
+    </form>
   );
 };
 

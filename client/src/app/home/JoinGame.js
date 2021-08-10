@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import RoomInfo from './RoomInfo';
 import { makeStyles } from '@material-ui/styles';
 import axios from 'axios';
-import { fetchRoom } from '../features/thunks';
 
 const useStyles = makeStyles({
   root: {
@@ -43,25 +42,12 @@ const useStyles = makeStyles({
       cursor: 'grab',
     },
   },
-  input: {
-    margin: '5px auto',
-    border: '1px solid #f5f5f5',
-    borderRadius: '20px',
-    padding: '20px',
-  },
-  button: {
-    margin: '5px auto',
-    border: '1px solid #f5f5f5',
-    borderRadius: '20px',
-    padding: '20px',
-  },
 });
 
 const JoinGame = ({ clickHandler }) => {
-  const dispatch = useDispatch();
   const [rooms, setRooms] = useState([]);
   useEffect(() => {
-    axios.get('http://localhost:5000/rooms')
+    axios.get('http://localhost:5000/room')
       .then(data => {
         console.log(data.data);
         setRooms(data.data);
@@ -70,27 +56,22 @@ const JoinGame = ({ clickHandler }) => {
 
   const classes = useStyles();
 
-  const roomClickHandler = (e) => {
-    e.preventDefault();
-    console.log('roomclicker', e.target.outerText);
-    dispatch(fetchRoom(e.target.outerText));
-  };
-
   return (
     <div className={classes.root}>
-    <input onClick={clickHandler} type="submit" value="Lobby" />
-    <ul className={classes.rooms} >
-    {
-    rooms.map((room, i) => (
-    <li key={i}
-      onClick={roomClickHandler}
-      className={classes.room}
-      value={room.name}>{room.name}
-    </li>))
+      <input onClick={clickHandler} type="button" value="Lobby" />
+      <ul className={classes.rooms} >
+      {
+        rooms.map((room, i) => (
+          <li key={i}
+            className={classes.room}
+            value={room.name}>
+              {room.name}
+            <RoomInfo room={room}/>
+          </li>
+        ))
       }
-    </ul>
+      </ul>
     </div>
-
   );
 };
 

@@ -29,13 +29,9 @@ const bodyParser = require('body-parser');
 app.use(cors());
 app.use(bodyParser.json());
 
-app.post('/player', (req, res) => {
-  res.send(players[req.body.select]);
-});
-
-app.get('/rooms', async (req, res) => {
+app.get('/room', async (req, res) => {
   try {
-    const rooms = await Room.find({}, '_id, name playersJoined', (err, rooms) => {
+    const rooms = await Room.find({}, '_id name users.username users.playerNumber', (err, rooms) => {
       if (err) console.error(err);
       res.send(rooms);
     });
@@ -44,15 +40,25 @@ app.get('/rooms', async (req, res) => {
   }
 });
 
-app.get('/room', async (req, res) => {
+app.post('/room/:id', async (req, res) => {
   try {
-    console.log(req);
-    const room = await Room.findOne({ name: req.body }).exec();
-      res.send(room);
+    const { number, name, update } = req.body;
+    const id = req.params.id;
+    let room, user;
+    if (update) {
+      await Room.findOneAndUpdate({ _id: id, 'users.playerNumber': number }, { 'users.$.username': name }, { useFindAndModify: false });
+    } else {
+      room = await Room.findOne({ _id: id });
+      user = addPlayerToDatabase(name, number);
+      room.users.push(user);
+      await room.save();
+    };
+    room = await Room.findOne({ _id: id, 'users.playerNumber': number }, '_id name whoseTurn ballOnHand allPrisons ballLocations users.$' );
+    res.send(room);
   } catch (err) {
     console.error(err);
-  }
-})
+  };
+});
 
 app.post('/room', async (req, res) => {
   try {

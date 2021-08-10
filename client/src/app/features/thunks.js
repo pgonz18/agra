@@ -20,25 +20,19 @@ export const sendBallMove = (data) => async (dispatch) => {
   socket.emit('ball moved', { ball, location });
 };
 
-export const sendCreateRoom = (data) => async (dispatch) => {
+export const fetchRoom = (data) => async (dispatch) => {
   try {
-
-    const { select, name, roomName } = data;
-    const response = await axios.post(URL, { roomName, username: name, number: select });
-
+    const { number, name, roomName, id, update } = data;
+    let response;
+    // if room already exists
+    if (id) {
+      response = await axios.post(`${URL}/${id}`, { number, name, update } );
+    } else {
+      response = await axios.post(URL, { roomName, username: name, number });
+    }
     const { allPrisons, ballLocations, whoseTurn } = response.data;
     const playerInfo = { ...response.data.users[0], allPrisons, ballLocations, whoseTurn };
     dispatch(addPlayer(playerInfo));
-  } catch (error) {
-    console.error(error);
-  };
-};
-
-export const fetchRoom = (room) => async (dispatch) => {
-  try {
-    console.log('thunk: ', room)
-    const response = await axios.get(URL, { name: room });
-    console.log(response);
   } catch (error) {
     console.error(error);
   };
