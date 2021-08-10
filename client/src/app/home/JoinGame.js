@@ -49,7 +49,6 @@ const JoinGame = ({ clickHandler }) => {
   useEffect(() => {
     axios.get('http://localhost:5000/room')
       .then(data => {
-        console.log(data.data);
         setRooms(data.data);
       }).catch(err => console.error(err));
   }, []);
