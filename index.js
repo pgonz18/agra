@@ -42,14 +42,14 @@ app.get('/room', async (req, res) => {
 
 app.post('/room/:id', async (req, res) => {
   try {
-    const { number, name, update } = req.body;
+    const { number, username, update } = req.body;
     const id = req.params.id;
     let room, user;
     if (update) {
-      await Room.findOneAndUpdate({ _id: id, 'users.playerNumber': number }, { 'users.$.username': name }, { useFindAndModify: false });
+      await Room.findOneAndUpdate({ _id: id, 'users.playerNumber': number }, { 'users.$.username': username }, { useFindAndModify: false });
     } else {
       room = await Room.findOne({ _id: id });
-      user = addPlayerToDatabase(name, number);
+      user = addPlayerToDatabase(username, number);
       room.users.push(user);
       await room.save();
     };
@@ -65,6 +65,36 @@ app.post('/room', async (req, res) => {
     const { roomName, username, number } = req.body;
     let room = await createRoom(roomName, username, number);
     res.send(room);
+  } catch (err) {
+    console.error(err);
+  };
+});
+
+app.put('/move/:id', async (req, res) => {
+  try {
+    const { ball, location } = req.body;
+    const id = req.params.id;
+    await Room.findOne({ _id: id }, 'ballLocations', (err, room) => {
+      room.ballLocations.set(ball, location);
+      room.save();
+    });
+    res.status(200);
+  } catch (err) {
+    console.error(err);
+  };
+});
+
+app.post('/move/:id', async (req, res) => {
+  try {
+    let whoseTurn = req.body.whoseTurn;
+    const id = req.params.id;
+    if (whoseTurn === 5) {
+      whoseTurn = 2;
+    } else {
+      whoseTurn++;
+    };
+    await Room.findOneAndUpdate({ _id: id }, { whoseTurn }, { useFindAndModify: false });
+    res.send({ whoseTurn });
   } catch (err) {
     console.error(err);
   };
@@ -95,8 +125,8 @@ io.on('connection', (socket) => {
     socket.emit('reset');
   });
 
-  socket.on('end turn', () => {
-    socket.broadcast.emit('end turn');
+  socket.on('end turn', (data) => {
+    socket.broadcast.emit('end turn', data);
   });
 });
 

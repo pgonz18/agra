@@ -5,7 +5,6 @@ export const playerSlice = createSlice({
   initialState: {},
   reducers: {
     addPlayer: (state, player) => {
-
       return player.payload;
     },
     rollDice: (state, value) => {
@@ -42,13 +41,9 @@ export const playerSlice = createSlice({
       state.won = false;
       state.winner = data.payload;
     },
-    endTurn: (state) => {
+    endTurn: (state, data) => {
       state.rolledNumber = 0;
-      if (state.whoseTurn === 5) {
-        state.whoseTurn = 2;
-      } else {
-        state.whoseTurn++;
-      };
+      state.whoseTurn = data.payload;
     },
   },
 });

@@ -32,7 +32,7 @@ const useStyles = makeStyles({
 const RoomInfo = ({ room }) => {
       const [open, setOpen] = useState(false);
       const [number, setNumber] = useState('');
-      const [name, setName] = useState('');
+      const [username, setUsername] = useState('');
       const [update, setUpdate] = useState(false);
 
       const dispatch = useDispatch();
@@ -53,25 +53,25 @@ const RoomInfo = ({ room }) => {
         let update = false;
         room.users.forEach(player => {
           if (player.playerNumber === e.target.value) {
-            setName(player.username);
+            setUsername(player.username);
             setUpdate(true);
             update = true;
           };
         });
         if (!update) {
-          setName('');
+          setUsername('');
           setUpdate(false);
         };
       };
 
-      const handleNameChange = (e) => {
+      const handleUsernameChange = (e) => {
         e.preventDefault();
-        setName(e.target.value);
+        setUsername(e.target.value);
       };
 
       const handleSubmit = (e) => {
         e.preventDefault();
-        dispatch(fetchRoom({ number, name, id: room._id, update }));
+        dispatch(fetchRoom({ number, username, id: room._id, update }));
       };
 
       return (
@@ -109,7 +109,7 @@ const RoomInfo = ({ room }) => {
                     <div className={classes.input}>
                       <label>
                         Player name:
-                        <input type="text" value={name} placeholder={name} onChange={handleNameChange} />
+                        <input type="text" value={username} onChange={handleUsernameChange} />
                       </label>
                     </div>
                     <div className={classes.button}>

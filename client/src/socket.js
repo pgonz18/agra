@@ -28,8 +28,8 @@ socket.on("connect", () => {
     store.dispatch(addPlayer({ data: {}, name: '' }));
   });
 
-  socket.on("end turn", () => {
-    store.dispatch(endTurn());
+  socket.on("end turn", (data) => {
+    store.dispatch(endTurn(data));
   });
 });
 

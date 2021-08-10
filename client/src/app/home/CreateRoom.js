@@ -46,7 +46,7 @@ const useStyles = makeStyles({
 
 const CreateRoom = ({ clickHandler }) => {
   const [number, setNumber] = useState('');
-  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
   const [roomName, setRoomName] = useState('');
 
   const dispatch = useDispatch();
@@ -58,9 +58,9 @@ const CreateRoom = ({ clickHandler }) => {
     setNumber(e.target.value);
   };
 
-  const handleNameChange = (e) => {
+  const handleUsernameChange = (e) => {
     e.preventDefault();
-    setName(e.target.value);
+    setUsername(e.target.value);
   };
 
   const handleRoomNameChange = (e) => {
@@ -70,7 +70,7 @@ const CreateRoom = ({ clickHandler }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(fetchRoom({ number, name, roomName }));
+    dispatch(fetchRoom({ number, username, roomName }));
   };
 
   return (
@@ -97,7 +97,7 @@ const CreateRoom = ({ clickHandler }) => {
       <div className={classes.input}>
       <label>
         Player name:
-        <input type="text" value={name} onChange={handleNameChange} />
+        <input type="text" value={username} onChange={handleUsernameChange} />
       </label>
       </div>
       <div className={classes.button}>

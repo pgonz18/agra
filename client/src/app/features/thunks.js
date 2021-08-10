@@ -1,13 +1,13 @@
 import socket from '../../socket';
 import { addMessage } from './chatSlice';
-import { addPlayer, moveBall } from './playerSlice';
+import { addPlayer, moveBall, endTurn } from './playerSlice';
 import axios from 'axios';
 
 //*** FOR LOCAL TESTING ***
-const URL = 'http://localhost:5000/room';
+const URL = 'http://localhost:5000/';
 
 //*** FOR PRODUCTION ***
-// const URL ='/room';
+// const URL ='/';
 
 export const sendMessage = (data) => async (dispatch) => {
   dispatch(addMessage(data));
@@ -15,23 +15,28 @@ export const sendMessage = (data) => async (dispatch) => {
 };
 
 export const sendBallMove = (data) => async (dispatch) => {
-  const { ball, location } = data;
-  dispatch(moveBall({ ball, location }));
-  socket.emit('ball moved', { ball, location });
+  try {
+    axios.put(`${URL}move/${data.roomId}`, data);
+    dispatch(moveBall(data));
+    socket.emit('ball moved', data);
+  } catch (err) {
+    console.error(err);
+  }
+
 };
 
 export const fetchRoom = (data) => async (dispatch) => {
   try {
-    const { number, name, roomName, id, update } = data;
+    const { number, username, roomName, id, update } = data;
     let response;
     // if room already exists
     if (id) {
-      response = await axios.post(`${URL}/${id}`, { number, name, update } );
+      response = await axios.post(`${URL}room/${id}`, { number, username, update } );
     } else {
-      response = await axios.post(URL, { roomName, username: name, number });
+      response = await axios.post(URL + 'room', { roomName, username, number });
     }
-    const { allPrisons, ballLocations, whoseTurn } = response.data;
-    const playerInfo = { ...response.data.users[0], allPrisons, ballLocations, whoseTurn };
+    const { allPrisons, ballLocations, whoseTurn, name, _id } = response.data;
+    const playerInfo = { ...response.data.users[0], allPrisons, ballLocations, whoseTurn, name, roomId: _id };
     dispatch(addPlayer(playerInfo));
   } catch (error) {
     console.error(error);
@@ -46,6 +51,9 @@ export const resetEveryone = () => {
   socket.emit('reset');
 };
 
-export const SendEndTurn = () => {
-  socket.emit('end turn');
+export const SendEndTurn = ({ whoseTurn, roomId }) => async (dispatch) => {
+  const response = await axios.post(`${URL}move/${roomId}`, { whoseTurn });
+  const nextTurn = response.data.whoseTurn;
+  dispatch(endTurn(nextTurn));
+  socket.emit('end turn', nextTurn);
 };

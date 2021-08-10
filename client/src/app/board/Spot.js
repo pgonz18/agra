@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/styles';
-import { grabBall, setWithinFinish, checkWin, endTurn } from '../features/playerSlice';
+import { grabBall, setWithinFinish, checkWin } from '../features/playerSlice';
 import { sendBallMove, SendEndTurn } from '../features/thunks';
 import { checkNewPosition, moveIntoFinishingArea } from '../features/helperFunctions';
 
@@ -113,6 +113,9 @@ const Spot = ({ value }) => {
     indexRange,
     allPrisons,
     finishLane,
+    name,
+    roomId,
+    whoseTurn,
     } = useSelector((state) => state.player);
 
   const props = { value, color: color };
@@ -146,12 +149,11 @@ const Spot = ({ value }) => {
       };
       if (ballLocations.includes(data)) {
         const index = ballLocations.indexOf(data);
-        dispatch(sendBallMove({ ball: index, location: allPrisons[index] }));
+        dispatch(sendBallMove({ ball: index, location: allPrisons[index], roomId }));
       };
-      dispatch(sendBallMove({ ball: ballOnHand, location: data }));
+      dispatch(sendBallMove({ ball: ballOnHand, location: data, roomId }));
       if (rolledNumber !== 6) {
-        SendEndTurn();
-        dispatch(endTurn());
+        SendEndTurn({ whoseTurn });
       };
     };
   };

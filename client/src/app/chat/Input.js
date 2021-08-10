@@ -16,7 +16,7 @@ const Input = () => {
   const handleSubmit = e => {
     e.preventDefault();
     setMessage('');
-    const data = { user: player.username, message, color: player.color };
+    const data = { username: player.username, message, color: player.color };
     dispatch(sendMessage(data));
   };
 
