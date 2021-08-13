@@ -61,7 +61,7 @@ const Lobby = () => {
 
   const resetGame = (e) => {
     e.preventDefault();
-    resetEveryone();
+    resetEveryone(player.roomId);
   };
 
   const clickHandler = (e) => {
@@ -70,11 +70,13 @@ const Lobby = () => {
   }
 
   if (player.playerNumber) {
-    if (player.won !== undefined) {
-      if (player.won) notifyWin(player.username);
+    if (player.winner !== '') {
+      if (player.winner === player.username) {
+        notifyWin(player.username, player.roomId);
+      };
       const display =
         <div>{
-          player.won ?
+          player.winner === player.username ?
             <div><h1>YOU WON!!!</h1></div> :
             <div><h1>You lost to {player.winner}!</h1></div>
           }
@@ -86,11 +88,10 @@ const Lobby = () => {
   };
 
   return (
-
-      click === 'Create' ?
-        <CreateRoom clickHandler={clickHandler} /> :
-        click === 'Join' ?
-        <JoinGame clickHandler={clickHandler} /> :
+    click === 'Create' ?
+      <CreateRoom clickHandler={clickHandler} /> :
+    click === 'Join' ?
+      <JoinGame clickHandler={clickHandler} /> :
     <div className={classes.root} >
       <div className={classes.join} >
       <label>
@@ -105,8 +106,6 @@ const Lobby = () => {
       <input onClick={clickHandler} type="submit" value="Create" />
         </div>
     </div>
-
-
   );
 };
 

@@ -113,9 +113,9 @@ const Spot = ({ value }) => {
     indexRange,
     allPrisons,
     finishLane,
-    name,
     roomId,
     whoseTurn,
+    _id,
     } = useSelector((state) => state.player);
 
   const props = { value, color: color };
@@ -127,33 +127,35 @@ const Spot = ({ value }) => {
     const previousLocation = ballLocations[ballOnHand];
     const newLocation = rolledNumber + parseInt(previousLocation);
     const adjustedIndex = parseInt(ballOnHand) % 4;
-    let data;
+    let data, finishZone = {};
 
     if (prison.includes(previousLocation) &&
       (rolledNumber === 1 || rolledNumber === 6)) {
       const playerBalls = [...ballLocations].splice(indexRange[0], 4);
-        if (!playerBalls.includes(startingSpot)) data = startingSpot;
+      if (!playerBalls.includes(startingSpot)) data = startingSpot;
     } else if (finishing[adjustedIndex] && newLocation > finishLine[0]) {
       data = moveIntoFinishingArea(newLocation, spotClicked, lastNum);
+      finishZone = { previousLocation };
     } else if (previousLocation === '100' && ['7', '21', '35', '49'].includes(spotClicked) && rolledNumber === 1) {
       data = spotClicked;
     }else {
       data = checkNewPosition(newLocation, spotClicked, playerNumber, previousLocation, rolledNumber);
     };
     if (data) {
-      if (finishLane[data] !== undefined) {
-        dispatch(checkWin({ location: data, ball: ballOnHand }));
-      };
-      if (data <= finishLine[0] && data > finishLine[1]) {
+      if (parseInt(data) <= finishLine[0] && parseInt(data) > finishLine[1]) {
         dispatch(setWithinFinish({ adjustedIndex, value: true }));
+        finishZone = {...finishZone, i: adjustedIndex };
       };
       if (ballLocations.includes(data)) {
         const index = ballLocations.indexOf(data);
-        dispatch(sendBallMove({ ball: index, location: allPrisons[index], roomId }));
+        dispatch(sendBallMove({ ball: index, location: allPrisons[index], roomId, _id }));
       };
-      dispatch(sendBallMove({ ball: ballOnHand, location: data, roomId }));
+      dispatch(sendBallMove({ ball: ballOnHand, location: data, roomId, playerNumber, ...finishZone, _id }));
+      if (finishLane[data] !== undefined) {
+        dispatch(checkWin({ location: data, previousLocation }));
+      };
       if (rolledNumber !== 6) {
-        SendEndTurn({ whoseTurn });
+        dispatch(SendEndTurn({ whoseTurn, roomId }));
       };
     };
   };

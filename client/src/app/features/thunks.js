@@ -16,13 +16,11 @@ export const sendMessage = (data) => async (dispatch) => {
 
 export const sendBallMove = (data) => async (dispatch) => {
   try {
-    axios.put(`${URL}move/${data.roomId}`, data);
     dispatch(moveBall(data));
     socket.emit('ball moved', data);
   } catch (err) {
     console.error(err);
-  }
-
+  };
 };
 
 export const fetchRoom = (data) => async (dispatch) => {
@@ -34,7 +32,7 @@ export const fetchRoom = (data) => async (dispatch) => {
       response = await axios.post(`${URL}room/${id}`, { number, username, update } );
     } else {
       response = await axios.post(URL + 'room', { roomName, username, number });
-    }
+    };
     const { allPrisons, ballLocations, whoseTurn, name, _id } = response.data;
     const playerInfo = { ...response.data.users[0], allPrisons, ballLocations, whoseTurn, name, roomId: _id };
     dispatch(addPlayer(playerInfo));
@@ -43,17 +41,21 @@ export const fetchRoom = (data) => async (dispatch) => {
   };
 };
 
-export const notifyWin = (name) => {
-  socket.emit('winner', name);
+export const notifyWin = (name, roomId) => {
+  socket.emit('winner', { name, roomId });
 };
 
-export const resetEveryone = () => {
-  socket.emit('reset');
+export const resetEveryone = (id) => {
+  socket.emit('reset', id);
 };
 
 export const SendEndTurn = ({ whoseTurn, roomId }) => async (dispatch) => {
-  const response = await axios.post(`${URL}move/${roomId}`, { whoseTurn });
-  const nextTurn = response.data.whoseTurn;
+  let nextTurn = whoseTurn;
+  if (nextTurn === 5) {
+    nextTurn = 2;
+  } else {
+    nextTurn++;
+  };
   dispatch(endTurn(nextTurn));
-  socket.emit('end turn', nextTurn);
+  socket.emit('end turn', { nextTurn, roomId });
 };

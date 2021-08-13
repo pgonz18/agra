@@ -23,22 +23,21 @@ export const playerSlice = createSlice({
       state.finishing[adjustedIndex] = value;
     },
     checkWin: (state, data) => {
-      const { ball, location } = data.payload;
-      const previousLocation = state.ballLocations[ball];
+      const { location, previousLocation } = data.payload;
+      state.finishLane[location] = true;
       if (state.finishLane[previousLocation] !== undefined) {
         state.finishLane[previousLocation] = false;
-      };
-      state.finishLane[location] = true;
-      let checkAllWin = true;
-      for (const key in state.finishLane) {
-        if (!state.finishLane[key]) checkAllWin = false;
-      };
-      if (checkAllWin) {
-        state.won = true;
+      } else {
+        let checkAllWin = true;
+        for (const key in state.finishLane) {
+          if (!state.finishLane[key]) checkAllWin = false;
+        };
+        if (checkAllWin) {
+          state.winner = state.username;
+        };
       };
     },
     setWinner: (state, data) => {
-      state.won = false;
       state.winner = data.payload;
     },
     endTurn: (state, data) => {

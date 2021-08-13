@@ -15,6 +15,7 @@ const playerSchema = new Schema({
     ballIndexAdjustment: Number,
     indexRange: [Number],
     ballOnHand: String,
+    winner: String,
 });
 
 const roomSchema = new Schema({
@@ -86,6 +87,7 @@ const addPlayerToDatabase = (username, number) => {
     lastNum,
     ballIndexAdjustment,
     indexRange,
+    winner: '',
   });
   return player;
 };

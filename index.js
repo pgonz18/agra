@@ -10,7 +10,7 @@ db.on('error', console.error.bind(console, 'connection error: '));
 
 db.once("open", () => {
   console.log("Database connected!")
-})
+});
 
 // *** FOR PRODUCTION ***
 // const io = require('socket.io')(server);
@@ -40,6 +40,17 @@ app.get('/room', async (req, res) => {
   }
 });
 
+
+app.post('/room', async (req, res) => {
+  try {
+    const { roomName, username, number } = req.body;
+    let room = await createRoom(roomName, username, number);
+    res.send(room);
+  } catch (err) {
+    console.error(err);
+  };
+});
+
 app.post('/room/:id', async (req, res) => {
   try {
     const { number, username, update } = req.body;
@@ -60,46 +71,6 @@ app.post('/room/:id', async (req, res) => {
   };
 });
 
-app.post('/room', async (req, res) => {
-  try {
-    const { roomName, username, number } = req.body;
-    let room = await createRoom(roomName, username, number);
-    res.send(room);
-  } catch (err) {
-    console.error(err);
-  };
-});
-
-app.put('/move/:id', async (req, res) => {
-  try {
-    const { ball, location } = req.body;
-    const id = req.params.id;
-    await Room.findOne({ _id: id }, 'ballLocations', (err, room) => {
-      room.ballLocations.set(ball, location);
-      room.save();
-    });
-    res.status(200);
-  } catch (err) {
-    console.error(err);
-  };
-});
-
-app.post('/move/:id', async (req, res) => {
-  try {
-    let whoseTurn = req.body.whoseTurn;
-    const id = req.params.id;
-    if (whoseTurn === 5) {
-      whoseTurn = 2;
-    } else {
-      whoseTurn++;
-    };
-    await Room.findOneAndUpdate({ _id: id }, { whoseTurn }, { useFindAndModify: false });
-    res.send({ whoseTurn });
-  } catch (err) {
-    console.error(err);
-  };
-});
-
 // *** FOR PRODUCTION ***
 // app.use(express.static((__dirname + '/client/build')));
 
@@ -109,25 +80,69 @@ app.use(express.static(path.join(__dirname, 'public')));
 io.on('connection', (socket) => {
   console.log('user connected');
 
-  socket.on('chat message', (data) => {
-    socket.broadcast.emit('chat message', data);
-  });
 
-  socket.on('ball moved', (data) => {
-    socket.broadcast.emit('ball moved', data);
-  });
+socket.on('chat message', (data) => {
+  socket.broadcast.emit('chat message', data);
+});
 
-  socket.on('winner', (data) => {
-    socket.broadcast.emit('winner', data);
-  });
+socket.on('ball moved', (data) => {
+  const { ball, location, i, previousLocation, playerNumber, _id, roomId } = data;
+  Room.findById(roomId)
+    .then((room) => {
+      room.ballLocations.set(ball, location);
+      if (i > -1 || previousLocation) {
+        const player = room.users.id(_id);
+          if (i > -1) {
+            player.finishing.set(i, true);
+          };
+          if (previousLocation) {
+            if (player.finishLane[previousLocation]) {
+              player.set({ finishLane: { ...player.finishLane, [previousLocation]: false } });
+            };
+            player.set({ finishLane: { ...player.finishLane, [location]: true } });
+          };
+        };
+      return room.save();
+      })
+    // clean up consoles, add winner to database so if game is not reset it can be reset later
+  .then((room) => socket.broadcast.emit('ball moved', data))
+  .catch((err) => {
+  console.error(err);
+});
 
-  socket.on('reset', () => {
+});
+
+socket.on('winner', async (data) => {
+  try {
+    const { name, roomId } = data;
+    await Room.findByIdAndUpdate(roomId, { '$set':
+    { 'users.$[].winner': name }
+  });
+    socket.broadcast.emit('winner', name);
+  } catch (err) {
+    console.error(err);
+  };
+});
+
+socket.on('reset', async (data) => {
+  try {
+    const id = data;
+    await Room.findByIdAndDelete(id);
     socket.emit('reset');
-  });
+  } catch (err) {
+    console.error(err);
+  };
+});
 
-  socket.on('end turn', (data) => {
-    socket.broadcast.emit('end turn', data);
-  });
+socket.on('end turn', async (data) => {
+  try {
+    const { nextTurn, roomId } = data;
+    await Room.findOneAndUpdate({ _id: roomId }, { whoseTurn: nextTurn }, { useFindAndModify: false });
+    socket.broadcast.emit('end turn', nextTurn);
+  } catch (err) {
+  console.error(err)
+  };
+});
 });
 
 const PORT = process.env.PORT || 5000;
