@@ -40,7 +40,7 @@ const ChatBox = () => {
       <h3>Chat</h3>
       <div className={classes.messages}>{
         messages.map((message, i) =>
-          <Messages message={message.message} player={message.user} color={message.color} key={i} />
+          <Messages message={message.message} player={message.username} color={message.color} key={i} />
       )}
       <div ref={chatRef}></div>
       </div>

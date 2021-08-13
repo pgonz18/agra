@@ -1,8 +1,8 @@
 import React from 'react';
-import JoinGame from './app/JoinGame';
+import Lobby from './app/Lobby';
 
 const App = () => (
-   <JoinGame />
+   <Lobby />
   );
 
 export default App;

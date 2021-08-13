@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/styles';
 import ChatBox from './chat/ChatBox';
 import Board from './board/Board'
 import Die from './dice/Die';
-import Instructions from './Instructions';
+import Instructions from './home/Instructions';
 
 const useStyles = makeStyles({
   root: {
@@ -21,7 +21,7 @@ const useStyles = makeStyles({
   },
 });
 
-const GameBox = () => {
+const Game = () => {
   const player = useSelector((state) => state.player);
 
   const classes = useStyles();
@@ -40,4 +40,4 @@ const GameBox = () => {
   );
 };
 
-export default GameBox;
+export default Game;

@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import GameBox from './GameBox';
+import { useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/styles';
-import { fetchPlayer, notifyWin, resetEveryone } from './features/thunks';
+import { fetchRoom } from '../features/thunks';
 
 const useStyles = makeStyles({
   root: {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
+    alignItems: 'flex-end',
     width: '350px',
     height: '350px',
     margin: 'auto',
@@ -18,77 +18,75 @@ const useStyles = makeStyles({
     boxShadow: '0px 11px 35px 2px rgba(0, 0, 0, 0.14)',
     font: 'bold 20px sans-serif',
   },
+  room: {
+    margin: '5px auto',
+    border: '1px solid #f5f5f5',
+    borderRadius: '20px',
+    padding: '20px',
+  },
   pickColor: {
-    margin: '1em auto',
+    margin: '5px auto',
     border: '1px solid #f5f5f5',
     borderRadius: '20px',
     padding: '20px',
   },
   input: {
-    margin: '1em auto',
+    margin: '5px auto',
     border: '1px solid #f5f5f5',
     borderRadius: '20px',
     padding: '20px',
   },
   button: {
-    margin: '1em auto',
+    margin: '5px auto',
     border: '1px solid #f5f5f5',
     borderRadius: '20px',
     padding: '20px',
   },
 });
 
-const JoinGame = () => {
-  const [select, setSelect] = useState('2');
-  const [name, setName] = useState('');
+const CreateRoom = ({ clickHandler }) => {
+  const [number, setNumber] = useState('');
+  const [username, setUsername] = useState('');
+  const [roomName, setRoomName] = useState('');
 
-  const player = useSelector((state) => state.player);
   const dispatch = useDispatch();
 
   const classes = useStyles();
 
-  const handleSelectChange = (e) => {
+  const handleNumberChange = (e) => {
     e.preventDefault();
-    setSelect(e.target.value);
+    setNumber(e.target.value);
   };
 
-  const handleNameChange = (e) => {
+  const handleUsernameChange = (e) => {
     e.preventDefault();
-    setName(e.target.value);
+    setUsername(e.target.value);
   };
+
+  const handleRoomNameChange = (e) => {
+    e.preventDefault();
+    setRoomName(e.target.value);
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(fetchPlayer({ select, name }));
-  };
-
-  const resetGame = (e) => {
-    e.preventDefault();
-    resetEveryone();
-  };
-
-  if (player.playerNumber) {
-    if (player.won !== undefined) {
-      if (player.won) notifyWin(name);
-      const display =
-        <div>{
-          player.won ?
-            <div><h1>YOU WON!!!</h1></div> :
-            <div><h1>You lost to {player.winner}!</h1></div>
-          }
-          <button onClick={resetGame}>Reset</button>
-        </div>;
-      return (display);
-    };
-    return ( <GameBox /> );
+    dispatch(fetchRoom({ number, username, roomName }));
   };
 
   return (
     <form className={classes.root} onSubmit={handleSubmit}>
+      <input onClick={clickHandler} type="button" value="Lobby" />
+      <div className={classes.room} >
+        <label>
+          Room name:
+          <input type="text" value={roomName} onChange={handleRoomNameChange} />
+        </label>
+      </div>
       <div className={classes.pickColor}>
         <label>
           Pick color:
-          <select value={select} onChange={handleSelectChange}>
+          <select value={number} onChange={handleNumberChange}>
+            <option value="">--Select color--</option>
             <option value="2">Red</option>
             <option value="3">Blue</option>
             <option value="4">Green</option>
@@ -99,7 +97,7 @@ const JoinGame = () => {
       <div className={classes.input}>
       <label>
         Player name:
-        <input type="text" value={name} onChange={handleNameChange} />
+        <input type="text" value={username} onChange={handleUsernameChange} />
       </label>
       </div>
       <div className={classes.button}>
@@ -109,4 +107,4 @@ const JoinGame = () => {
   );
 };
 
-export default JoinGame;
+export default CreateRoom;

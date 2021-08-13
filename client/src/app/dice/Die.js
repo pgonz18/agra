@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/styles';
 import CasinoIcon from '@material-ui/icons/Casino';
-import { rollDice, endTurn } from '../features/playerSlice';
+import { rollDice } from '../features/playerSlice';
 import { SendEndTurn } from '../features/thunks';
 
 const useStyles = makeStyles({
@@ -23,7 +23,7 @@ const useStyles = makeStyles({
 });
 
 const Die = () => {
-  const { rolledNumber, color } = useSelector(state => state.player);
+  const { rolledNumber, color, whoseTurn, roomId } = useSelector(state => state.player);
   const dispatch = useDispatch();
 
   const classes = useStyles({ color });
@@ -34,8 +34,7 @@ const Die = () => {
 
   const endTurnClickHandler = (e) => {
     e.preventDefault();
-    SendEndTurn();
-    dispatch(endTurn());
+    dispatch(SendEndTurn({ whoseTurn, roomId }));
   };
 
   return (

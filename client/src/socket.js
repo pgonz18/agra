@@ -4,33 +4,35 @@ import { addMessage } from './app/features/chatSlice';
 import { moveBall, setWinner, addPlayer, endTurn } from './app/features/playerSlice';
 
 // *** FOR LOCAL TESTING ***
-// const SERVER = "http://localhost:5000";
+const SERVER = "http://localhost:5000";
 
 // *** FOR PRODUCTION ***
-const SERVER = "/";
+// const SERVER = "/";
 
 var socket = io(SERVER);
 
 socket.on("connect", () => {
-  socket.on("chat message", (data) => {
-    store.dispatch(addMessage(data));
-  });
+  console.log('user connected');
+});
 
-  socket.on("ball moved", (data) => {
-    store.dispatch(moveBall(data));
-  });
+socket.on("chat message", (data) => {
+  store.dispatch(addMessage(data));
+});
 
-  socket.on("winner", (data) => {
-    store.dispatch(setWinner(data));
-  });
+socket.on("ball moved", (data) => {
+  store.dispatch(moveBall(data));
+});
 
-  socket.on("reset", () => {
-    store.dispatch(addPlayer({ data: {}, name: '' }));
-  });
+socket.on("winner", (data) => {
+  store.dispatch(setWinner(data));
+});
 
-  socket.on("end turn", () => {
-    store.dispatch(endTurn());
-  });
+socket.on("reset", () => {
+  store.dispatch(addPlayer({ data: {}, name: '' }));
+});
+
+socket.on("end turn", (data) => {
+  store.dispatch(endTurn(data));
 });
 
 export default socket;
