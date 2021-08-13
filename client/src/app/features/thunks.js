@@ -36,6 +36,7 @@ export const fetchRoom = (data) => async (dispatch) => {
     const { allPrisons, ballLocations, whoseTurn, name, _id } = response.data;
     const playerInfo = { ...response.data.users[0], allPrisons, ballLocations, whoseTurn, name, roomId: _id };
     dispatch(addPlayer(playerInfo));
+    socket.emit('join room', { roomId: playerInfo.roomId });
   } catch (error) {
     console.error(error);
   };
