@@ -4,15 +4,19 @@ import { makeStyles } from '@material-ui/styles';
 import axios from 'axios';
 
 const useStyles = makeStyles({
+  app: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'flex-start',
+  },
   root: {
     display: 'flex',
     flexDirection: 'column',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
     alignItems: 'center',
-    width: '350px',
-    height: '350px',
-    margin: 'auto',
+    flex: '1 40%',
+    margin: '10%',
+    padding: '10%',
     borderRadius: '1.5em',
     backgroundColor: '#ffffff',
     boxShadow: '0px 11px 35px 2px rgba(0, 0, 0, 0.14)',
@@ -37,6 +41,7 @@ const useStyles = makeStyles({
     border: '1px solid #f5f5f5',
     borderRadius: '20px',
     padding: '20px',
+    color: 'green',
     '&:hover': {
       color: 'blue',
       cursor: 'grab',
@@ -56,6 +61,7 @@ const JoinGame = ({ clickHandler }) => {
   const classes = useStyles();
 
   return (
+    <div className={classes.app} >
     <div className={classes.root}>
       <input onClick={clickHandler} type="button" value="Lobby" />
       <ul className={classes.rooms} >
@@ -70,6 +76,7 @@ const JoinGame = ({ clickHandler }) => {
         ))
       }
       </ul>
+    </div>
     </div>
   );
 };

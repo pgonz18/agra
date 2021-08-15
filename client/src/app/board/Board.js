@@ -10,11 +10,10 @@ const useStyles = makeStyles({
     backgroundColor: '#E7B18F',
     paddingTop: '10px',
     height: '340px',
-    width: '410px',
+    width: '400px',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    flex: '0 1 auto',
     boxShadow: '10px 5px 5px #6649ec',
   },
 });

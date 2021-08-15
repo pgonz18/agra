@@ -7,14 +7,18 @@ import { makeStyles } from '@material-ui/styles';
 import { notifyWin, resetEveryone } from './features/thunks';
 
 const useStyles = makeStyles({
-  root: {
+  app: {
     display: 'flex',
     flexDirection: 'column',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    width: '350px',
-    height: '350px',
-    margin: 'auto',
+  },
+  root: {
+    padding: '10%',
+    margin: '10%',
+    flexDirection: 'column',
+    flex: '1 40%',
+    display: 'flex',
     borderRadius: '1.5em',
     backgroundColor: '#ffffff',
     boxShadow: '0px 11px 35px 2px rgba(0, 0, 0, 0.14)',
@@ -92,6 +96,9 @@ const Lobby = () => {
       <CreateRoom clickHandler={clickHandler} /> :
     click === 'Join' ?
       <JoinGame clickHandler={clickHandler} /> :
+      <div className={classes.app}>
+
+
     <div className={classes.root} >
       <div className={classes.join} >
       <label>
@@ -101,10 +108,11 @@ const Lobby = () => {
       </div>
       <div className={classes.create} >
       <label>
-        Create a new game here!
+        Create game!
       </label>
       <input onClick={clickHandler} type="submit" value="Create" />
         </div>
+    </div>
     </div>
   );
 };
