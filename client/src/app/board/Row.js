@@ -4,10 +4,12 @@ import Spot from './Spot';
 
 const useStyles = makeStyles({
   root: {
+    display: 'flex',
     border: 'none',
-    margin: '0',
+    margin: '2px',
     height: '15px',
     flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 

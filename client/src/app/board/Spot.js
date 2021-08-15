@@ -21,7 +21,6 @@ const playerColors = (num) => {
 
 const useStyles = makeStyles({
   box: {
-    flexDirection: 'row',
     border: '1px hidden #E7B18F',
     borderRadius: '50%',
     height: '17px',
@@ -29,7 +28,6 @@ const useStyles = makeStyles({
     margin: '5px',
   },
   circle: {
-    flexDirection: 'row',
     border: '1px inset black',
     borderRadius: '50%',
     boxShadow: 'inset 0 0 6px black',
@@ -42,7 +40,6 @@ const useStyles = makeStyles({
     },
   },
   sphere: {
-    flexDirection: 'row',
     border: '1px groove black',
     borderRadius: '50%',
     height: '15px',
@@ -56,7 +53,6 @@ const useStyles = makeStyles({
     },
   },
   redEnemySphere: {
-    flexDirection: 'row',
     border: '1px solid black',
     borderRadius: '50%',
     height: '15px',
@@ -66,7 +62,6 @@ const useStyles = makeStyles({
     backgroundColor: 'red',
   },
   yellowEnemySphere: {
-    flexDirection: 'row',
     border: '1px solid black',
     borderRadius: '50%',
     height: '15px',
@@ -76,7 +71,6 @@ const useStyles = makeStyles({
     backgroundColor: '#ff8c00',
   },
   blueEnemySphere: {
-    flexDirection: 'row',
     border: '1px solid black',
     borderRadius: '50%',
     height: '15px',
@@ -86,7 +80,6 @@ const useStyles = makeStyles({
     backgroundColor: 'blue',
   },
   greenEnemySphere: {
-    flexDirection: 'row',
     border: '1px solid black',
     borderRadius: '50%',
     height: '15px',
