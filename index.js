@@ -13,14 +13,14 @@ db.once("open", () => {
 });
 
 // *** FOR PRODUCTION ***
-// const io = require('socket.io')(server);
+const io = require('socket.io')(server);
 
 // *** FOR LOCAL TESTING ***
-const io = require('socket.io')(server, {
-  cors: {
-    origin: 'http://localhost:3000'
-  }
-});
+// const io = require('socket.io')(server, {
+//   cors: {
+//     origin: 'http://localhost:3000'
+//   }
+// });
 
 const players = require('./players/player');
 const cors = require('cors');

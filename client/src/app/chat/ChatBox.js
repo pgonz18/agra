@@ -7,15 +7,12 @@ import Input from './Input';
 const useStyles = makeStyles({
   root: {
     maxHeight: '200px',
-    // width: '180px',
     flex: '1 20%',
     padding: '1%',
     margin: '1%',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
-    margin: '1%',
-    padding: '1%',
   },
   messages: {
     flex: '1 80%',

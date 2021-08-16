@@ -4,10 +4,10 @@ import { addPlayer, moveBall, endTurn } from './playerSlice';
 import axios from 'axios';
 
 //*** FOR LOCAL TESTING ***
-const URL = 'http://localhost:5000/';
+// const URL = 'http://localhost:5000/';
 
 //*** FOR PRODUCTION ***
-// const URL ='/';
+const URL ='/';
 
 export const sendMessage = (data) => async (dispatch) => {
   dispatch(addMessage(data));
