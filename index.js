@@ -72,10 +72,10 @@ app.post('/room/:id', async (req, res) => {
 });
 
 // *** FOR PRODUCTION ***
-// app.use(express.static((__dirname + '/client/build')));
+app.use(express.static((__dirname + '/client/build')));
 
 // *** FOR LOCAL TESTING ***
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 
 io.on('connection', (socket) => {
   console.log('user connected');

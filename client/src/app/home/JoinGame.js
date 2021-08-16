@@ -49,10 +49,16 @@ const useStyles = makeStyles({
   },
 });
 
+//*** FOR LOCAL TESTING ***
+// const URL = 'http://localhost:5000/';
+
+//*** FOR PRODUCTION ***
+const URL ='/';
+
 const JoinGame = ({ clickHandler }) => {
   const [rooms, setRooms] = useState([]);
   useEffect(() => {
-    axios.get('http://localhost:5000/room')
+    axios.get(URL + 'room')
       .then(data => {
         setRooms(data.data);
       }).catch(err => console.error(err));
