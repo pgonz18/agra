@@ -13,14 +13,14 @@ db.once("open", () => {
 });
 
 // *** FOR PRODUCTION ***
-// const io = require('socket.io')(server);
+const io = require('socket.io')(server);
 
 // *** FOR LOCAL TESTING ***
-const io = require('socket.io')(server, {
-  cors: {
-    origin: 'http://localhost:3000'
-  }
-});
+// const io = require('socket.io')(server, {
+//   cors: {
+//     origin: 'http://localhost:3000'
+//   }
+// });
 
 const players = require('./players/player');
 const cors = require('cors');
@@ -80,69 +80,71 @@ app.use(express.static(path.join(__dirname, 'public')));
 io.on('connection', (socket) => {
   console.log('user connected');
 
-
-socket.on('chat message', (data) => {
-  socket.broadcast.emit('chat message', data);
-});
-
-socket.on('ball moved', (data) => {
-  const { ball, location, i, previousLocation, playerNumber, _id, roomId } = data;
-  Room.findById(roomId)
-    .then((room) => {
-      room.ballLocations.set(ball, location);
-      if (i > -1 || previousLocation) {
-        const player = room.users.id(_id);
-          if (i > -1) {
-            player.finishing.set(i, true);
-          };
-          if (previousLocation) {
-            if (player.finishLane[previousLocation]) {
-              player.set({ finishLane: { ...player.finishLane, [previousLocation]: false } });
-            };
-            player.set({ finishLane: { ...player.finishLane, [location]: true } });
-          };
-        };
-      return room.save();
-      })
-    // clean up consoles, add winner to database so if game is not reset it can be reset later
-  .then((room) => socket.broadcast.emit('ball moved', data))
-  .catch((err) => {
-  console.error(err);
-});
-
-});
-
-socket.on('winner', async (data) => {
-  try {
-    const { name, roomId } = data;
-    await Room.findByIdAndUpdate(roomId, { '$set':
-    { 'users.$[].winner': name }
+  socket.on('join room', (data) => {
+    socket.join(data.roomId);
   });
-    socket.broadcast.emit('winner', name);
-  } catch (err) {
-    console.error(err);
-  };
-});
 
-socket.on('reset', async (data) => {
-  try {
-    const id = data;
-    await Room.findByIdAndDelete(id);
-    socket.emit('reset');
-  } catch (err) {
-    console.error(err);
-  };
-});
+  socket.on('chat message', (data) => {
+    socket.broadcast.to(data.roomId).emit('chat message', data);
+  });
 
-socket.on('end turn', async (data) => {
-  try {
-    const { nextTurn, roomId } = data;
-    await Room.findOneAndUpdate({ _id: roomId }, { whoseTurn: nextTurn }, { useFindAndModify: false });
-    socket.broadcast.emit('end turn', nextTurn);
-  } catch (err) {
-  console.error(err)
-  };
-});
+  socket.on('ball moved', (data) => {
+    const { ball, location, i, previousLocation, playerNumber, _id, roomId } = data;
+    Room.findById(roomId)
+      .then((room) => {
+        room.ballLocations.set(ball, location);
+        if (i > -1 || previousLocation) {
+          const player = room.users.id(_id);
+            if (i > -1) {
+              player.finishing.set(i, true);
+            };
+            if (previousLocation) {
+              if (player.finishLane[previousLocation]) {
+                player.set({ finishLane: { ...player.finishLane, [previousLocation]: false } });
+              };
+              player.set({ finishLane: { ...player.finishLane, [location]: true } });
+            };
+          };
+        return room.save();
+        })
+    .then((room) => socket.broadcast.to(roomId).emit('ball moved', data))
+    .catch((err) => {
+    console.error(err);
+  });
+
+  });
+
+  socket.on('winner', async (data) => {
+    try {
+      const { name, roomId } = data;
+      await Room.findByIdAndUpdate(roomId, { '$set':
+      { 'users.$[].winner': name }
+    });
+    socket.broadcast.to(roomId).emit('winner', name);
+    } catch (err) {
+      console.error(err);
+    };
+  });
+
+  socket.on('reset', async (data) => {
+    try {
+      const id = data;
+      await Room.findByIdAndDelete(id);
+      socket.to(id).emit('reset');
+    } catch (err) {
+      console.error(err);
+    };
+  });
+
+  socket.on('end turn', async (data) => {
+    try {
+      const { nextTurn, roomId } = data;
+      await Room.findOneAndUpdate({ _id: roomId }, { whoseTurn: nextTurn }, { useFindAndModify: false });
+      socket.broadcast.to(roomId).emit('end turn', nextTurn);
+    } catch (err) {
+    console.error(err)
+    };
+  });
 });
 
 const PORT = process.env.PORT || 5000;

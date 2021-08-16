@@ -4,19 +4,24 @@ import { makeStyles } from '@material-ui/styles';
 import { fetchRoom } from '../features/thunks';
 
 const useStyles = makeStyles({
-  root: {
+  app: {
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'column',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    alignItems: 'flex-end',
-    width: '350px',
-    height: '350px',
-    margin: 'auto',
+  },
+  root: {
+    flex: '1 40%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: '10%',
+    margin: '10%',
     borderRadius: '1.5em',
     backgroundColor: '#ffffff',
     boxShadow: '0px 11px 35px 2px rgba(0, 0, 0, 0.14)',
     font: 'bold 20px sans-serif',
+    color: 'blue',
   },
   room: {
     margin: '5px auto',
@@ -74,6 +79,7 @@ const CreateRoom = ({ clickHandler }) => {
   };
 
   return (
+    <div className={classes.app} >
     <form className={classes.root} onSubmit={handleSubmit}>
       <input onClick={clickHandler} type="button" value="Lobby" />
       <div className={classes.room} >
@@ -104,6 +110,7 @@ const CreateRoom = ({ clickHandler }) => {
       <input type="submit" value="Submit" />
       </div>
     </form>
+    </div>
   );
 };
 

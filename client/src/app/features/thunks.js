@@ -4,10 +4,10 @@ import { addPlayer, moveBall, endTurn } from './playerSlice';
 import axios from 'axios';
 
 //*** FOR LOCAL TESTING ***
-const URL = 'http://localhost:5000/';
+// const URL = 'http://localhost:5000/';
 
 //*** FOR PRODUCTION ***
-// const URL ='/';
+const URL ='/';
 
 export const sendMessage = (data) => async (dispatch) => {
   dispatch(addMessage(data));
@@ -36,6 +36,7 @@ export const fetchRoom = (data) => async (dispatch) => {
     const { allPrisons, ballLocations, whoseTurn, name, _id } = response.data;
     const playerInfo = { ...response.data.users[0], allPrisons, ballLocations, whoseTurn, name, roomId: _id };
     dispatch(addPlayer(playerInfo));
+    socket.emit('join room', { roomId: playerInfo.roomId });
   } catch (error) {
     console.error(error);
   };

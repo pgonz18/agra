@@ -14,10 +14,9 @@ const useStyles = makeStyles({
     flexWrap: 'wrap',
   },
   instrucstionsAndDie: {
-    width: '100px',
-    heigth: '100px',
-    paddingLeft: '15px',
-    flex: '0 1 auto',
+    padding: '1%',
+    margin: '1%',
+    flex: '1 20%',
   },
 });
 
@@ -28,8 +27,8 @@ const Game = () => {
 
   return (
     <div className={classes.root} >
-      <ChatBox />
       <Board />
+      <ChatBox />
       <div className={classes.instrucstionsAndDie}>
       <Instructions />
       {

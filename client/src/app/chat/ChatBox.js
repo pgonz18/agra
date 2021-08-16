@@ -6,14 +6,16 @@ import Input from './Input';
 
 const useStyles = makeStyles({
   root: {
-    height: '300px',
-    width: '180px',
+    maxHeight: '200px',
+    flex: '1 20%',
+    padding: '1%',
+    margin: '1%',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
-    margin: '1px',
   },
   messages: {
+    flex: '1 80%',
     overflowY: 'auto',
     display: 'flex',
     flexDirection: 'column',
@@ -21,6 +23,7 @@ const useStyles = makeStyles({
     maxWidth: '175px',
   },
   input: {
+    flex: '1 1%',
     height: '20px',
     marginTop: '5px',
   },
@@ -32,17 +35,18 @@ const ChatBox = () => {
   const chatRef = useRef(null);
 
   useEffect(() => {
-    chatRef.current.scrollIntoView({behavior: "smooth"});
+    chatRef.current.scrollIntoView({behavior: "smooth", block: "end"});
+    chatRef.current.focus({ preventScroll: false });
   });
 
   return (
     <div className={classes.root}>
       <h3>Chat</h3>
-      <div className={classes.messages}>{
+      <div className={classes.messages} >{
         messages.map((message, i) =>
           <Messages message={message.message} player={message.username} color={message.color} key={i} />
       )}
-      <div ref={chatRef}></div>
+      <div ref={chatRef} ></div>
       </div>
       <div className={classes.input}>
         <Input />
