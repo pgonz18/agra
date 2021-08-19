@@ -22,6 +22,12 @@ const io = require('socket.io')(server);
 //   }
 // });
 
+// *** FOR PRODUCTION ***
+app.use(express.static((__dirname + '/client/build')));
+
+// *** FOR LOCAL TESTING ***
+// app.use(express.static(path.join(__dirname, 'public')));
+
 const players = require('./players/player');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -70,12 +76,6 @@ app.post('/room/:id', async (req, res) => {
     console.error(err);
   };
 });
-
-// *** FOR PRODUCTION ***
-app.use(express.static((__dirname + '/client/build')));
-
-// *** FOR LOCAL TESTING ***
-// app.use(express.static(path.join(__dirname, 'public')));
 
 io.on('connection', (socket) => {
   console.log('user connected');
